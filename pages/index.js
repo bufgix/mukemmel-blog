@@ -1,81 +1,75 @@
 import React from "react";
 import fetch from "isomorphic-unfetch";
 import Head from "next/head";
-import Link from "next/link";
+import Particles from "../components/particles";
+import Post from "../components/post";
+import Typewriter from "typewriter-effect";
 import ReactMarkdown from "react-markdown";
+import { Container } from "react-bootstrap";
+import AOS from "aos";
 
-const Home = ({ posts }) => (
-  <div className="container">
-    <Head>
-      <title>Home</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+import "./index.css";
+import "aos/dist/aos.css";
 
-    <div className="hero">
-      <h1 className="hero-title">Selman Kahya</h1>
-      <div className="hero-social-links">
-        <Link href="https://medium.com/@selmankahya">
-          <a className="social-link">Medium</a>
-        </Link>
-        <Link href="https://www.twitter.com/selmankahyax">
-          <a className="social-link">Twitter</a>
-        </Link>
-        <Link href="https://www.linkedin.com/in/selmankahya">
-          <a className="social-link">LinkedIn</a>
-        </Link>
-        <Link href="https://www.instagram.com/selmankahyax/?hl=en">
-          <a className="social-link">Instagram</a>
-        </Link>
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      screenHeight: null
+    };
+  }
+
+  componentDidMount() {
+    AOS.init();
+    this.setState({
+      screenHeight: window.innerHeight / 1.5
+    });
+  }
+  render() {
+    const { posts } = this.props;
+    const { screenHeight } = this.state;
+    return (
+      <div>
+        <Head>
+          <title>Home</title>
+          <link rel="icon" href="/favicon.ico" />
+          <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossOrigin="anonymous"
+          />
+        </Head>
+        <Particles />
+        <Container
+          style={{ height: screenHeight }}
+          className="banner text-center"
+        >
+          <p className="bn-ov">
+            Make it{" "}
+            <div className="typewriter">
+              <Typewriter
+                options={{
+                  strings: ["work", "right", "fast"],
+                  autoStart: true,
+                  loop: true
+                }}
+              />
+            </div>
+            .
+          </p>
+        </Container>
+        <Container>
+          {posts.map((post, index) => (
+            <Post post={post} key={index} />
+          ))}
+        </Container>
+
+        <style jsx>{``}</style>
       </div>
-    </div>
-
-    {posts.map(post => (
-      <div className="blog">
-        <h2 className="blog-title">
-          <Link href={post.slug}>
-            <a className="blog-title-link">{post.title}</a>
-          </Link>
-        </h2>
-        <div className="blog-text">
-          <ReactMarkdown source={post.details} />
-        </div>
-        <div className="blog-date">{post.date}</div>
-      </div>
-    ))}
-
-    <style jsx>{`
-      .container {
-        max-width: 650px;
-        width: 100%;
-        margin: 0 auto;
-      }
-
-      .hero {
-        text-align: center;
-        margin: 96px 0;
-      }
-
-      .social-link {
-        margin-right: 8px;
-      }
-
-      .hero-title {
-        font-size: 48px;
-      }
-
-      .blog-date {
-        text-align: right;
-        color: #cccccc;
-        margin: 12px 0 48px 0;
-      }
-
-      a {
-        color: #35459e;
-        text-decoration: none;
-      }
-    `}</style>
-  </div>
-);
+    );
+  }
+}
 
 Home.getInitialProps = async ({ req }) => {
   // TODO: aşağıdaki satırda bulunan adresi kendi sunucu adresinle değiştirmelisin
