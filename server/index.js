@@ -3,6 +3,7 @@ const next = require("next");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2");
+const session = require("express-session");
 const dotenv = require("dotenv").config();
 
 const dev = process.env.NODE_ENV !== "production";
@@ -17,6 +18,15 @@ nextApp.prepare().then(() => {
   // Body parser
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+
+  // Session
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: true,
+      saveUninitialized: true
+    })
+  );
 
   // Passport configure
   app.use(passport.initialize());
@@ -52,13 +62,17 @@ nextApp.prepare().then(() => {
 
   const isUserAuthenticated = (req, res, next) => {
     if (req.user) {
+      console.log("Bir user var");
       if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
+        console.log("Hos gelidin ömer");
         next();
       } else {
+        console.log("Farklı kullanıcı");
         req.logout();
         res.redirect("/");
       }
     } else {
+      console.log("login olmamıs");
       res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
     }
   };
