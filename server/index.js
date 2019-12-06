@@ -72,10 +72,7 @@ nextApp.prepare().then(() => {
   );
 
   app.get("/dashboard", isUserAuthenticated, (req, res) => {
-    if (false) {
-      return handle(req, res);
-    }
-    return res.redirect("/");
+    return handle(req, res);
   });
 
   app.get("*", (req, res) => {
