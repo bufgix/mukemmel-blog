@@ -1,22 +1,18 @@
 export const getPosts = () => {
   return [
     {
-      title: "1500TL ödül! Sen de yarışmaya katıl!",
-      slug: "yarisma",
-      details: require("./posts/yarisma.md").default,
-      date: "5 Aralık 2019"
+      title: "mukemmel-blog v1.0.1",
+      slug: "ozelikler",
+      details: require("./posts/ozelikler.md").default,
+      date: "6 Aralık 2019",
+      imageUrl: "https://i.hizliresim.com/nbqQ2a.jpg"
     },
     {
       title: "Örnek yazı",
       slug: "ornek-yazi",
       details: require("./posts/ornek-yazi.md").default,
-      date: "3 Aralık 2019"
-    },
-    {
-      title: "Python",
-      slug: "python",
-      details: require("./posts/merhaba.md").default,
-      date: "1 Aralık 2019"
+      date: "3 Aralık 2019",
+      imageUrl: "https://i.hizliresim.com/Rg5r9o.jpg"
     }
   ];
 };

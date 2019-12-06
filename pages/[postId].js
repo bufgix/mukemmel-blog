@@ -27,7 +27,7 @@ class BlogPost extends React.Component {
         <Head />
         <Container>
           <div className="blog mt-3 mt-sm-3 mb-5">
-            <Image src="/post-image.webp" fluid />
+            <Image src={post.imageUrl} fluid />
             <h1 className="blog-title mt-2">{post.title}</h1>
             <p className="text-muted">
               <FaClock /> {post.date}

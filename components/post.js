@@ -22,7 +22,7 @@ class Post extends React.Component {
         <hr className="fancy-hr" />
         <Row>
           <Col md={4}>
-            <Image src="/post-image.webp" fluid />
+            <Image src={post.imageUrl} fluid />
           </Col>
           <Col md={8} className="align-items-end">
             <div className="post-content">
@@ -43,7 +43,8 @@ Post.propTypes = {
     title: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     details: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired
+    slug: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired
   }).isRequired
 };
 
