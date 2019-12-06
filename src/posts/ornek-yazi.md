@@ -10,9 +10,9 @@ _Bu italik bir yazı_
 
 #### Alıntı mı yapmak istiyorsun
 
-> Alıntılar iç içe girebilir
->
-> > ...bunun gibi
+> “Perfection is achieved not when there is nothing more to add, but rather when there is nothing more to take away.”
+> 
+> – Antoine de Saint-Exupery
 
 #### Listeler
 
@@ -44,5 +44,7 @@ Ya da bu üç tik kullanabilirsin:
 ```
 Sample text here...
 ```
+
+## h2 tagi
 
 Daha fazlası için: https://markdown-it.github.io/

@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
+import removeMarkdown from "remove-markdown";
 import { Row, Col, Image } from "react-bootstrap";
 import { FaClock } from "react-icons/fa";
+import textElipsis from "text-ellipsis";
 
 class Post extends React.Component {
   constructor(props) {
@@ -24,7 +26,7 @@ class Post extends React.Component {
           </Col>
           <Col md={8} className="align-items-end">
             <div className="post-content">
-              {post.details}{" "}
+              {textElipsis(removeMarkdown(post.details), 200)}{" "}
               <Link href={`/${post.slug}`}>
                 <a className="read-more">Devamını oku</a>
               </Link>

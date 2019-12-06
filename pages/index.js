@@ -1,10 +1,10 @@
 import React from "react";
 import fetch from "isomorphic-unfetch";
-import Head from "next/head";
 import Particles from "../components/particles";
 import Post from "../components/post";
+import Social from "../components/Social";
+import Head from "../components/Head";
 import Typewriter from "typewriter-effect";
-import ReactMarkdown from "react-markdown";
 import { Container } from "react-bootstrap";
 import AOS from "aos";
 
@@ -30,24 +30,16 @@ class Home extends React.Component {
     const { screenHeight } = this.state;
     return (
       <div>
-        <Head>
-          <title>Home</title>
-          <link rel="icon" href="/favicon.ico" />
-          <link
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-            crossOrigin="anonymous"
-          />
-        </Head>
-        <Particles />
+        <Head />
+        <Particles height={screenHeight} />
         <Container
+          data-aos="zoom-in"
           style={{ height: screenHeight }}
-          className="banner text-center"
+          className="d-flex flex-column banner text-center"
         >
           <p className="bn-ov">
             Make it{" "}
-            <div className="typewriter">
+            <span className="typewriter">
               <Typewriter
                 options={{
                   strings: ["work", "right", "fast"],
@@ -55,9 +47,10 @@ class Home extends React.Component {
                   loop: true
                 }}
               />
-            </div>
+            </span>
             .
           </p>
+          <Social />
         </Container>
         <Container>
           {posts.map((post, index) => (

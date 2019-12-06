@@ -13,8 +13,8 @@ export const getPosts = () => {
       date: "3 Aralık 2019"
     },
     {
-      title: "Merhaba dünya!",
-      slug: "merhaba",
+      title: "Python",
+      slug: "python",
       details: require("./posts/merhaba.md").default,
       date: "1 Aralık 2019"
     }
