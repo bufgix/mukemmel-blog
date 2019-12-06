@@ -18,9 +18,6 @@ nextApp.prepare().then(() => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  app.get("/hey", (req, res) => {
-    res.status(200).json({ hello: "hello world" });
-  });
 
   // Passport configure
   app.use(passport.initialize());
