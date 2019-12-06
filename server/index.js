@@ -18,7 +18,6 @@ nextApp.prepare().then(() => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-
   // Passport configure
   app.use(passport.initialize());
   app.use(passport.session());
@@ -51,6 +50,19 @@ nextApp.prepare().then(() => {
     })
   );
 
+  const isUserAuthenticated = (req, res, next) => {
+    if (req.user) {
+      if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
+        next();
+      } else {
+        req.logout();
+        res.redirect("/");
+      }
+    } else {
+      res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
+    }
+  };
+
   app.get(
     "/auth/google/callback",
     passport.authenticate("google", { scope: ["profile"] }),
@@ -58,6 +70,13 @@ nextApp.prepare().then(() => {
       res.redirect("/");
     }
   );
+
+  app.get("/dashboard", isUserAuthenticated, (req, res) => {
+    if (false) {
+      return handle(req, res);
+    }
+    return res.redirect("/");
+  });
 
   app.get("*", (req, res) => {
     return handle(req, res);
