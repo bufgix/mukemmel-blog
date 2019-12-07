@@ -70,7 +70,7 @@ class CreatePost extends React.Component {
           Router.push("/");
         })
         .catch(err => {
-          console.log("err");
+          console.log(err);
         });
     } else {
       Swal.fire({
