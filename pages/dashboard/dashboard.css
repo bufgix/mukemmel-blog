@@ -1,0 +1,75 @@
+[class*="profilebox-"] {
+  color: #e0e0e0;
+}
+.profilebox-border-wrap {
+  padding-top: 0;
+  padding: 1rem;
+  position: relative;
+  background: linear-gradient(to right, #fe8702, #da1c5e);
+  padding: 2px;
+}
+
+.profilebox {
+  margin-top: 0 !important;
+  padding: 2rem;
+  background-color: #100e17;
+}
+.profilebox ul {
+  padding: 0;
+  list-style-type: none;
+}
+.profilebox ul li {
+  font-size: 18px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.profilebox ul li a {
+  margin-left: 0.4rem;
+}
+
+.profilebox ul li code {
+  margin-left: 2px;
+  padding: 4px;
+  border-radius: 0.5rem;
+  background-color: #181818;
+}
+
+.profilebox-function-btn {
+  font-size: 24px;
+}
+
+/* Create post styles */
+.darkMd {
+  background-color: #181818 !important;
+  color: white !important;
+}
+
+[class*="create-post"] {
+  color: white;
+}
+.create-post input {
+  background-color: #181818;
+  border-radius: 0;
+}
+
+.create-post input:focus {
+  border-color: #da1c5e;
+  box-shadow: none;
+  outline: 0 none;
+  background-color: #100e17;
+  color: #e0e0e0;
+}
+
+.create-post h3 span {
+  font-size: 12px;
+}
+.create-post a {
+  font-size: 24px;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px !important;
+  }
+}

@@ -5,6 +5,26 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2");
 const session = require("express-session");
 const dotenv = require("dotenv").config();
+const mongoose = require("mongoose");
+const git = require("git-last-commit");
+
+// Calling models
+const Post = require("./models/post");
+
+// Databse connection
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+});
+let db = mongoose.connection;
+
+db.on("error", err => {
+  console.log(`Databse connection error: ${err}`);
+});
+db.on("open", () => {
+  console.log("Database connected");
+});
 
 const dev = process.env.NODE_ENV !== "production";
 const nextApp = next({ dev });
@@ -39,7 +59,6 @@ nextApp.prepare().then(() => {
         callbackURL: process.env.GOOGLE_CALLBACK_URL
       },
       (accessToken, refreshToken, profile, done) => {
-        console.log(JSON.stringify(profile));
         done(null, profile);
       }
     )
@@ -85,7 +104,34 @@ nextApp.prepare().then(() => {
     }
   );
 
-  app.get("/dashboard", isUserAuthenticated, (req, res) => {
+  app.get("/api/getlastcommit", (req, res) => {
+    git.getLastCommit((err, { shortHash, branch }) => {
+      res.status(200).json({ shortHash, branch });
+    });
+  });
+
+  app.get("/api/posts", (req, res) => {
+    Post.find({}, (err, posts) => {
+      if (err) throw err;
+      res.status(200).json(posts);
+    });
+  });
+
+  // TODO: login_required
+  app.get("/api/posts/create", (req, res) => {
+    let post = new Post({
+      title: "Mongo db ilk post",
+      details: "Mongo db details",
+      imageUrl: "https://i.hizliresim.com/nbqQ2a.jpg"
+    });
+    post.save(err => {
+      if (err) throw err;
+      res.status(200).json(post);
+    });
+  });
+
+  // TODO: Login required
+  app.get("/dashboard", (req, res) => {
     return handle(req, res);
   });
 
