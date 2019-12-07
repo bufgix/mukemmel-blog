@@ -101,7 +101,7 @@ class Dashboard extends React.Component {
 }
 
 Dashboard.getInitialProps = async ({ req }) => {
-  const res = await fetch("http://localhost:3000/api/getlastcommit");
+  const res = await fetch("https://bufgix.herokuapp.com/api/getlastcommit");
   const { shortHash, branch } = await res.json();
   return { shortHash, branch };
 };

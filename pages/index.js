@@ -65,7 +65,7 @@ class Home extends React.Component {
 }
 
 Home.getInitialProps = async ({ req }) => {
-  const res = await fetch("http://localhost:3000/api/posts");
+  const res = await fetch("https://bufgix.herokuapp.com/api/posts");
   const posts = await res.json();
   return { posts };
 };
