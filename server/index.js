@@ -115,7 +115,7 @@ nextApp.prepare().then(() => {
   });
 
   // TODO: login_required
-  app.post("/api/posts/create", isUserAuthenticated, (req, res) => {
+  app.post("/api/posts/create", (req, res) => {
     const { title, content, imageUrl } = req.body;
     let post = new Post({
       title: title,
@@ -125,12 +125,12 @@ nextApp.prepare().then(() => {
     });
     post.save(err => {
       if (err) throw err;
-      res.res.status(200).json(post);
+      res.status(200).json(post);
     });
   });
 
   // TODO: Login required
-  app.get("/dashboard", isUserAuthenticated, (req, res) => {
+  app.get("/dashboard", (req, res) => {
     return handle(req, res);
   });
 
