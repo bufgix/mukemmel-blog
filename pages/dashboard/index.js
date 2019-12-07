@@ -2,13 +2,7 @@ import React from "react";
 import Head from "../../components/Head";
 import fetch from "isomorphic-unfetch";
 import { Row, Col, Container, Image, Button } from "react-bootstrap";
-import {
-  FaCheckCircle,
-  FaArrowAltCircleRight,
-  FaPlusCircle,
-  FaEye,
-  FaThList
-} from "react-icons/fa";
+import { FaCheckCircle, FaPlusCircle, FaEye, FaThList } from "react-icons/fa";
 
 import CreatePost from "../../components/createPost";
 import ListPost from "../../components/listPosts";
@@ -26,7 +20,7 @@ class Dashboard extends React.Component {
     };
   }
 
-  renderLeftSide() {
+  renderRightSide() {
     const { currentPage } = this.state;
     if (currentPage === "all") {
       return <ListPost />;
@@ -97,7 +91,7 @@ class Dashboard extends React.Component {
               </div>
             </Col>
             <Col className="dashboard-content mt-3" md={8}>
-              {this.renderLeftSide()}
+              {this.renderRightSide()}
             </Col>
           </Row>
         </Container>

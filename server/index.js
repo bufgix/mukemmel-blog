@@ -7,6 +7,7 @@ const session = require("express-session");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
 const git = require("git-last-commit");
+const slugify = require("slugify");
 
 // Calling models
 const Post = require("./models/post");
@@ -118,11 +119,13 @@ nextApp.prepare().then(() => {
   });
 
   // TODO: login_required
-  app.get("/api/posts/create", (req, res) => {
+  app.post("/api/posts/create", isUserAuthenticated, (req, res) => {
+    const { title, content, imageUrl } = req.body;
     let post = new Post({
-      title: "Mongo db ilk post",
-      details: "Mongo db details",
-      imageUrl: "https://i.hizliresim.com/nbqQ2a.jpg"
+      title: title,
+      details: content,
+      imageUrl: imageUrl,
+      slug: slugify(title)
     });
     post.save(err => {
       if (err) throw err;
@@ -131,8 +134,20 @@ nextApp.prepare().then(() => {
   });
 
   // TODO: Login required
-  app.get("/dashboard", (req, res) => {
+  app.get("/dashboard", isUserAuthenticated, (req, res) => {
     return handle(req, res);
+  });
+
+  app.get("/api/posts/:slug", (req, res) => {
+    Post.findOne({ slug: req.params.slug }, (err, post) => {
+      if (err) throw err;
+      console.log(post);
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res.status(404).json("Notfound");
+      }
+    });
   });
 
   app.get("*", (req, res) => {

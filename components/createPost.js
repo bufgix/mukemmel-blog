@@ -1,7 +1,10 @@
-import React from "react";
+import React, { createRef } from "react";
 import dynamic from "next/dynamic";
+import Router from "next/router";
 import { Form } from "react-bootstrap";
 import MarkdownIt from "markdown-it";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false
@@ -17,6 +20,7 @@ class CreatePost extends React.Component {
     this.state = {
       content: ""
     };
+    this.titleRef = createRef();
 
     this.mdParser = new MarkdownIt({
       highlight: function(str, lang) {
@@ -44,53 +48,84 @@ class CreatePost extends React.Component {
   }
 
   getBannerImageUrl() {
-    const images = this.state.content.match(
-      /!\[Banner\]\((.+?\.(?:png|jpg)[^)]*)\)/
-    );
-    if (typeof images[1] !== "undefined") {
-      console.log(images[1]);
+    const images = this.state.content.match(/^!\[Banner\]\((.+)\)/);
+    if (images) {
+      return images[1];
+    } else return false;
+  }
+
+  sendPost(e) {
+    e.preventDefault();
+    const { content } = this.state;
+    const bannerImage = this.getBannerImageUrl();
+    if (bannerImage) {
+      axios
+        .post("http://localhost:3000/api/posts/create", {
+          title: this.titleRef.current.value,
+          content: content.replace(/^!\[Banner\]\((.+)\)/, ""),
+          imageUrl: bannerImage
+        })
+        .then(res => {
+          console.log(res);
+          Router.push("/");
+        })
+        .catch(err => {
+          console.log("err");
+        });
+    } else {
+      Swal.fire({
+        title: "Hmmm",
+        html:
+          "Görünüşe göre gönderine başlangıç resmi koymayı unutmuşsun.<br>Resmini gönderini en başına koyabilirsin<code>![Banner](<img_ul>)</code> ",
+        icon: "question",
+        confirmButtonText: "Anladım"
+      });
     }
   }
 
   render() {
     return (
       <div className="create-post mb-4">
-        <h3 className="create-post-title">
-          Başlık{" "}
-          <span className="text-muted">İlgi çekici olmasına dikkat et</span>
-        </h3>
-        <hr className="fancy-hr" />
-        <Form.Control
-          autoComplete="off"
-          className="my-3"
-          type="text"
-          name="title"
-          placeholder="Dünaynın en iyi başlığı"
-        />
-        <h3>
-          İçerik{" "}
-          <span className="text-muted">Tamemen Markdown. Keyfini çıkar</span>
-        </h3>
-        <hr className="fancy-hr" />
-        <div style={{ height: this.editorHeight }}>
-          <MdEditor
-            value={this.bootContent}
-            renderHTML={text => this.mdParser.render(text)}
-            config={{
-              markdownClass: "darkMd",
-              view: {
-                md: true,
-                menu: true,
-                fullScreen: true,
-                html: true
-              }
-            }}
-            onChange={this.handleEditorChange.bind(this)}
+        <form onSubmit={this.sendPost.bind(this)}>
+          <h3 className="create-post-title">
+            Başlık{" "}
+            <span className="text-muted">İlgi çekici olmasına dikkat et</span>
+          </h3>
+          <hr className="fancy-hr" />
+          <input
+            autoComplete="off"
+            className="my-3"
+            type="text"
+            name="title"
+            placeholder="Dünaynın en iyi başlığı"
+            required
+            ref={this.titleRef}
           />
-        </div>
-        <a className="my-4" href="#">
-          Yayınla
-        </a>
+          <h3>
+            İçerik{" "}
+            <span className="text-muted">Tamemen Markdown. Keyfini çıkar</span>
+          </h3>
+          <hr className="fancy-hr" />
+          <div style={{ height: this.editorHeight }}>
+            <MdEditor
+              value={this.bootContent}
+              renderHTML={text => this.mdParser.render(text)}
+              config={{
+                markdownClass: "darkMd",
+                view: {
+                  md: true,
+                  menu: true,
+                  fullScreen: true,
+                  html: true
+                }
+              }}
+              onChange={this.handleEditorChange.bind(this)}
+            />
+          </div>
+          <button type="submit">
+            <a className="my-4">Yayınla</a>
+          </button>
+        </form>
       </div>
     );
   }

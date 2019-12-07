@@ -1,11 +1,11 @@
 import React from "react";
-import fetch from "isomorphic-unfetch";
-import Link from "next/link";
+import Router from "next/router";
 import ReactMarkdown from "react-markdown";
 import { Container, Image } from "react-bootstrap";
 import { FaClock } from "react-icons/fa";
 import Social from "../components/Social";
 import Head from "../components/Head";
+import axios from "axios";
 
 import "highlight.js/styles/atelier-plateau-dark.css";
 import hljs from "highlight.js";
@@ -14,14 +14,32 @@ import "../pages/index.css";
 class BlogPost extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      post: {}
+    };
   }
 
-  componentDidMount(){
-      hljs.initHighlightingOnLoad();
+  componentDidMount() {
+    const { slug } = this.props;
+    axios
+      .get(
+        `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/posts/${slug}`
+      )
+      .then(res => {
+        this.setState({ post: res.data }, () => {
+          hljs.initHighlighting.called = false;
+          hljs.initHighlighting();
+        });
+      })
+      .catch(err => {
+        if (err.response.status == 404) {
+          Router.push("/");
+        }
+      });
   }
 
   render() {
-    const { post } = this.props;
+    const { post } = this.state;
     return (
       <div>
         <Head />
@@ -48,9 +66,7 @@ class BlogPost extends React.Component {
 
 BlogPost.getInitialProps = async ({ req, query }) => {
   // TODO: aşağıdaki satırda bulunan adresi kendi sunucu adresinle değiştirmelisin
-  const res = await fetch(`https://bufgix.herokuapp.com/api/post/${query.postId}`);
-  const json = await res.json();
-  return { post: json.post };
+  return { slug: query.postSlug };
 };
 
 export default BlogPost;
