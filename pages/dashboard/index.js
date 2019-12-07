@@ -7,8 +7,6 @@ import { FaCheckCircle, FaPlusCircle, FaEye, FaThList } from "react-icons/fa";
 import CreatePost from "../../components/createPost";
 import ListPost from "../../components/listPosts";
 
-import { IoMdGitCommit } from "react-icons/io";
-
 import "./dashboard.css";
 import "../index.css";
 
@@ -30,7 +28,6 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { shortHash, branch } = this.props;
     return (
       <div>
         <Head />
@@ -81,11 +78,6 @@ class Dashboard extends React.Component {
                       <FaEye />
                       <a href="#">Siteyi gör</a>
                     </li>
-                    <li>
-                      <IoMdGitCommit />
-                      <a href="#">Son commit</a>
-                      <code>{`${shortHash}:${branch}`}</code>
-                    </li>
                   </ul>
                 </div>
               </div>
@@ -99,11 +91,5 @@ class Dashboard extends React.Component {
     );
   }
 }
-
-Dashboard.getInitialProps = async ({ req }) => {
-  const res = await fetch("https://bufgix.herokuapp.com/api/getlastcommit");
-  const { shortHash, branch } = await res.json();
-  return { shortHash, branch };
-};
 
 export default Dashboard;

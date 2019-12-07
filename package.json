@@ -16,7 +16,6 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
-    "git-last-commit": "^1.0.0",
     "highlight.js": "^9.16.2",
     "isomorphic-unfetch": "^3.0.0",
     "markdown-it": "^10.0.0",

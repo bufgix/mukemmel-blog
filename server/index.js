@@ -6,7 +6,6 @@ const GoogleStrategy = require("passport-google-oauth2");
 const session = require("express-session");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
-const git = require("git-last-commit");
 const slugify = require("slugify");
 
 // Calling models
@@ -105,11 +104,6 @@ nextApp.prepare().then(() => {
     }
   );
 
-  app.get("/api/getlastcommit", (req, res) => {
-    git.getLastCommit((err, { shortHash, branch }) => {
-      res.status(200).json({ shortHash, branch });
-    });
-  });
 
   app.get("/api/posts", (req, res) => {
     Post.find({}, (err, posts) => {
