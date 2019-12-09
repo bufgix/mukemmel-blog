@@ -6,7 +6,6 @@ import Social from "../components/Social";
 import Head from "../components/Head";
 import fetch from "isomorphic-unfetch";
 import hljs from "highlight.js";
-import Swal from "sweetalert2";
 
 import "highlight.js/styles/atelier-plateau-dark.css";
 import "../pages/index.css";
@@ -27,7 +26,7 @@ class BlogPost extends React.Component {
     return (
       <div>
         <Head />
-        <Container>
+        <Container className="blog-container">
           <div className="blog mt-3 mt-sm-3 mb-5">
             <Image src={post.imageUrl} fluid />
             <h1 className="blog-title mt-2">{post.title}</h1>
@@ -53,7 +52,6 @@ BlogPost.getInitialProps = async ({ req, query, res }) => {
     `${process.env.DOMAIN}/api/posts/${query.postSlug}`
   );
   if (resData.status == 404) {
-    Swal.fire({ text: "Helllo" });
     res.redirect(`/?notFound=${true}`);
   } else {
     const postData = await resData.json();
