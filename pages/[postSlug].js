@@ -1,46 +1,28 @@
 import React from "react";
-import Router from "next/router";
 import ReactMarkdown from "react-markdown";
 import { Container, Image } from "react-bootstrap";
 import { FaClock } from "react-icons/fa";
 import Social from "../components/Social";
 import Head from "../components/Head";
-import axios from "axios";
+import fetch from "isomorphic-unfetch";
+import hljs from "highlight.js";
 
 import "highlight.js/styles/atelier-plateau-dark.css";
-import hljs from "highlight.js";
 import "../pages/index.css";
 import "./details.css";
 
 class BlogPost extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      post: {}
-    };
   }
 
   componentDidMount() {
-    const { slug } = this.props;
-    axios
-      .get(
-        `${process.env.DOMAIN}/api/posts/${slug}`
-      )
-      .then(res => {
-        this.setState({ post: res.data }, () => {
-          hljs.initHighlighting.called = false;
-          hljs.initHighlighting();
-        });
-      })
-      .catch(err => {
-        if (err.response.status == 404) {
-          Router.push("/");
-        }
-      });
+    hljs.initHighlighting.called = false;
+    hljs.initHighlighting();
   }
 
   render() {
-    const { post } = this.state;
+    const { post } = this.props;
     return (
       <div>
         <Head />
@@ -65,9 +47,16 @@ class BlogPost extends React.Component {
   }
 }
 
-BlogPost.getInitialProps = async ({ req, query }) => {
-  // TODO: aşağıdaki satırda bulunan adresi kendi sunucu adresinle değiştirmelisin
-  return { slug: query.postSlug };
+BlogPost.getInitialProps = async ({ req, query, res }) => {
+  const resData = await fetch(
+    `${process.env.DOMAIN}/api/posts/${query.postSlug}`
+  );
+  if (resData.status == 404) {
+    res.redirect("/");
+  } else {
+    const postData = await resData.json();
+    return { post: postData };
+  }
 };
 
 export default BlogPost;

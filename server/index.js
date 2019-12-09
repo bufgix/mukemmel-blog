@@ -52,7 +52,7 @@ nextApp.prepare().then(() => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.use(cors({ origin: "http://bufgix.herokuapp.com", credentials: true }));
+  app.use(cors({ origin: process.env.DOMAIN, credentials: true }));
 
   passport.use(
     new GoogleStrategy(
@@ -83,16 +83,20 @@ nextApp.prepare().then(() => {
   );
 
   const isUserAuthenticated = (req, res, next) => {
-    if (req.user) {
-      console.log("Bir user var");
-      if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
-        next();
+    if (!dev) {
+      if (req.user) {
+        console.log("Bir user var");
+        if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
+          next();
+        } else {
+          req.logout();
+          res.redirect("/");
+        }
       } else {
-        req.logout();
-        res.redirect("/");
+        res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
       }
-    } else {
-      res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
+    }else {
+        next();
     }
   };
 
