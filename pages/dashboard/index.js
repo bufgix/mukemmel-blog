@@ -14,17 +14,32 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPage: "all" // "create"
+      currentPage: "all", // "create"
+      prevTitle: "",
+      prevMdContent: ""
     };
   }
 
   renderRightSide() {
-    const { currentPage } = this.state;
+    const { currentPage, prevTitle, prevMdContent } = this.state;
     if (currentPage === "all") {
       return <ListPost />;
     } else if (currentPage == "create") {
-      return <CreatePost />;
+      return (
+        <CreatePost
+          save={this.save.bind(this)}
+          title={prevTitle}
+          content={prevMdContent}
+        />
+      );
     }
+  }
+
+  save(prevTitle, prevMdContent) {
+    this.setState({
+      prevTitle,
+      prevMdContent
+    });
   }
 
   render() {

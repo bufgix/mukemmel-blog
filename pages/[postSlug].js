@@ -6,6 +6,7 @@ import Social from "../components/Social";
 import Head from "../components/Head";
 import fetch from "isomorphic-unfetch";
 import hljs from "highlight.js";
+import Swal from "sweetalert2";
 
 import "highlight.js/styles/atelier-plateau-dark.css";
 import "../pages/index.css";
@@ -52,7 +53,8 @@ BlogPost.getInitialProps = async ({ req, query, res }) => {
     `${process.env.DOMAIN}/api/posts/${query.postSlug}`
   );
   if (resData.status == 404) {
-    res.redirect("/");
+    Swal.fire({ text: "Helllo" });
+    res.redirect(`/?notFound=${true}`);
   } else {
     const postData = await resData.json();
     return { post: postData };

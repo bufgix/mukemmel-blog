@@ -6,6 +6,7 @@ import Social from "../components/Social";
 import Head from "../components/Head";
 import Typewriter from "typewriter-effect";
 import { Container } from "react-bootstrap";
+import Swal from "sweetalert2";
 import AOS from "aos";
 
 import "./index.css";
@@ -20,6 +21,17 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+    const { notFound } = this.props;
+    if (notFound) {
+      Swal.fire({
+        icon: "error",
+        text: "İçerik bulunamadı",
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+      window.history.replaceState(null, null, window.location.pathname);
+    }
     AOS.init();
     this.setState({
       screenHeight: window.innerHeight / 1.5
@@ -64,10 +76,11 @@ class Home extends React.Component {
   }
 }
 
-Home.getInitialProps = async ({ req }) => {
+Home.getInitialProps = async ({ req, query }) => {
   const res = await fetch(`${process.env.DOMAIN}/api/posts`);
   const posts = await res.json();
-  return { posts };
+
+  return { posts, notFound: query.notFound };
 };
 
 export default Home;

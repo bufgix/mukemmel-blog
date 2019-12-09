@@ -4,6 +4,7 @@ import Router from "next/router";
 import MarkdownIt from "markdown-it";
 import axios from "axios";
 import Swal from "sweetalert2";
+import PropTypes from "prop-types";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false
@@ -17,9 +18,9 @@ class CreatePost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: ""
+      content: "",
+      title: props.title
     };
-    this.titleRef = createRef();
 
     this.mdParser = new MarkdownIt({
       highlight: function(str, lang) {
@@ -34,6 +35,7 @@ class CreatePost extends React.Component {
 
     this.editorHeight = 500;
     this.bootContent =
+      props.content ||
       "`![Banner](<img_ul>)`\nBunu unutma! içeriğin giriş resmi olacak.";
   }
 
@@ -41,7 +43,7 @@ class CreatePost extends React.Component {
     hljs.initHighlightingOnLoad();
   }
 
-  handleEditorChange({ html, text }, event) {
+  handleEditorChange({ text }) {
     this.setState({
       content: text
     });
@@ -56,12 +58,12 @@ class CreatePost extends React.Component {
 
   sendPost(e) {
     e.preventDefault();
-    const { content } = this.state;
+    const { content, title } = this.state;
     const bannerImage = this.getBannerImageUrl();
     if (bannerImage) {
       axios
         .post(`${process.env.DOMAIN}/api/posts/create`, {
-          title: this.titleRef.current.value,
+          title: title,
           content: content.replace(/^!\[Banner\]\((.+)\)/, ""),
           imageUrl: bannerImage
         })
@@ -83,7 +85,13 @@ class CreatePost extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    const { save } = this.props;
+    const { content, title } = this.state;
+    save(title, content);
+  }
   render() {
+    const { title } = this.state;
     return (
       <div className="create-post mb-4">
         <form onSubmit={this.sendPost.bind(this)}>
@@ -93,13 +101,18 @@ class CreatePost extends React.Component {
           </h3>
           <hr className="fancy-hr" />
           <input
+            value={title}
+            onChange={e => {
+              this.setState({
+                title: e.target.value
+              });
+            }}
             autoComplete="off"
             className="my-3"
             type="text"
             name="title"
             placeholder="Dünaynın en iyi başlığı"
             required
-            ref={this.titleRef}
           />
           <h3>
             İçerik{" "}
@@ -130,5 +143,11 @@ class CreatePost extends React.Component {
     );
   }
 }
+
+CreatePost.propTypes = {
+  save: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired
+};
 
 export default CreatePost;
