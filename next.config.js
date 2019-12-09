@@ -1,4 +1,5 @@
 const withCSS = require("@zeit/next-css");
+require("dotenv").config();
 
 module.exports = withCSS({
   webpack: config => {
@@ -6,7 +7,10 @@ module.exports = withCSS({
       test: /\.md$/,
       use: "raw-loader"
     });
-    
+
     return config;
+  },
+  env: {
+    DOMAIN: process.env.DOMAIN
   }
 });
