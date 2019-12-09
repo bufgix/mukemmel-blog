@@ -1,9 +1,7 @@
 import React, { createRef } from "react";
 import dynamic from "next/dynamic";
 import Router from "next/router";
-import { Form } from "react-bootstrap";
 import MarkdownIt from "markdown-it";
-import markdownItAttrs from "markdown-it-attrs";
 import axios from "axios";
 import Swal from "sweetalert2";
 
