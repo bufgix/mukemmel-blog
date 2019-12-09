@@ -131,14 +131,13 @@ nextApp.prepare().then(() => {
     return handle(req, res);
   });
 
-  app.get("/api/posts/:slug", isUserAuthenticated, (req, res) => {
+  app.get("/api/posts/:slug", (req, res) => {
     Post.findOne({ slug: req.params.slug }, (err, post) => {
       if (err) throw err;
-      console.log(post);
       if (post) {
         res.status(200).json(post);
       } else {
-        res.status(404).json("Notfound");
+        res.status(404).json("Not found");
       }
     });
   });

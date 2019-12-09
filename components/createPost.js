@@ -31,12 +31,7 @@ class CreatePost extends React.Component {
         return "";
       }
     });
-    this.mdParser.use(markdownItAttrs, {
-      // optional, these are default options
-      leftDelimiter: "{",
-      rightDelimiter: "}",
-      allowedAttributes: [] // empty array = all attributes are allowed
-    });
+
     this.editorHeight = 500;
     this.bootContent =
       "`![Banner](<img_ul>)`\nBunu unutma! içeriğin giriş resmi olacak.";
