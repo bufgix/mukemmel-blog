@@ -60,7 +60,7 @@ class CreatePost extends React.Component {
     const bannerImage = this.getBannerImageUrl();
     if (bannerImage) {
       axios
-        .post("http://localhost:3000/api/posts/create", {
+        .post(`${process.env.DOMAIN}/api/posts/create`, {
           title: this.titleRef.current.value,
           content: content.replace(/^!\[Banner\]\((.+)\)/, ""),
           imageUrl: bannerImage

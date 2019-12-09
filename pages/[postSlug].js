@@ -24,7 +24,7 @@ class BlogPost extends React.Component {
     const { slug } = this.props;
     axios
       .get(
-        `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/posts/${slug}`
+        `${process.env.DOMAIN}/api/posts/${slug}`
       )
       .then(res => {
         this.setState({ post: res.data }, () => {
