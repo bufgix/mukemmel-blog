@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import Router from "next/router";
 import { Form } from "react-bootstrap";
 import MarkdownIt from "markdown-it";
+import markdownItAttrs from "markdown-it-attrs";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -31,6 +32,12 @@ class CreatePost extends React.Component {
         }
         return "";
       }
+    });
+    this.mdParser.use(markdownItAttrs, {
+      // optional, these are default options
+      leftDelimiter: "{",
+      rightDelimiter: "}",
+      allowedAttributes: [] // empty array = all attributes are allowed
     });
     this.editorHeight = 500;
     this.bootContent =

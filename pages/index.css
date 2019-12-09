@@ -72,6 +72,11 @@ a:hover {
   color: #ffffff;
 }
 
+.blog-content img {
+    max-width: 100%;
+    height: auto;
+}
+
 .hljs {
   background-color: #181818;
 }

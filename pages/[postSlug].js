@@ -10,6 +10,7 @@ import axios from "axios";
 import "highlight.js/styles/atelier-plateau-dark.css";
 import hljs from "highlight.js";
 import "../pages/index.css";
+import "./details.css";
 
 class BlogPost extends React.Component {
   constructor(props) {
