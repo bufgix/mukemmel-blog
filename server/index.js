@@ -52,7 +52,7 @@ nextApp.prepare().then(() => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.use(cors({ origin: "*" }));
+  app.use(cors({ origin: "http://bufgix.herokuapp.com", credentials: true }));
 
   passport.use(
     new GoogleStrategy(
@@ -86,15 +86,12 @@ nextApp.prepare().then(() => {
     if (req.user) {
       console.log("Bir user var");
       if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
-        console.log("Hos gelidin ömer");
         next();
       } else {
-        console.log("Farklı kullanıcı");
         req.logout();
         res.redirect("/");
       }
     } else {
-      console.log("login olmamıs");
       res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
     }
   };
@@ -115,7 +112,7 @@ nextApp.prepare().then(() => {
   });
 
   // TODO: login_required
-  app.post("/api/posts/create", (req, res) => {
+  app.post("/api/posts/create", isUserAuthenticated, (req, res) => {
     const { title, content, imageUrl } = req.body;
     let post = new Post({
       title: title,
@@ -130,11 +127,11 @@ nextApp.prepare().then(() => {
   });
 
   // TODO: Login required
-  app.get("/dashboard", (req, res) => {
+  app.get("/dashboard", isUserAuthenticated, (req, res) => {
     return handle(req, res);
   });
 
-  app.get("/api/posts/:slug", (req, res) => {
+  app.get("/api/posts/:slug", isUserAuthenticated, (req, res) => {
     Post.findOne({ slug: req.params.slug }, (err, post) => {
       if (err) throw err;
       console.log(post);
