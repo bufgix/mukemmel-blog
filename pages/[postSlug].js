@@ -4,6 +4,7 @@ import { Container, Image } from "react-bootstrap";
 import { FaClock } from "react-icons/fa";
 import Social from "../components/Social";
 import Head from "../components/Head";
+import { Analytics } from "../components/googleAnalytics";
 import fetch from "isomorphic-unfetch";
 import hljs from "highlight.js";
 
@@ -17,6 +18,8 @@ class BlogPost extends React.Component {
   }
 
   componentDidMount() {
+    console.log(window.location.pathname);
+    Analytics.logPageView(window.location.pathname);
     hljs.initHighlighting.called = false;
     hljs.initHighlighting();
   }
