@@ -43,7 +43,7 @@ nextApp.prepare().then(() => {
   app.use(
     session({
       secret: process.env.SESSION_SECRET,
-      resave: true,
+      resave: false,
       saveUninitialized: true
     })
   );
@@ -83,7 +83,7 @@ nextApp.prepare().then(() => {
   );
 
   const isUserAuthenticated = (req, res, next) => {
-    if (!dev) {
+    if (true) {
       if (req.user) {
         console.log("Bir user var");
         if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
@@ -95,8 +95,8 @@ nextApp.prepare().then(() => {
       } else {
         res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
       }
-    }else {
-        next();
+    } else {
+      next();
     }
   };
 
@@ -104,9 +104,14 @@ nextApp.prepare().then(() => {
     "/auth/google/callback",
     passport.authenticate("google", { scope: ["profile"] }),
     (req, res) => {
-      res.redirect("/");
+      res.redirect("/dashboard");
     }
   );
+
+  app.get("/user/logout", (req, res) => {
+    req.logout();
+    res.redirect(`/?exit=${true}`);
+  });
 
   app.get("/api/posts", (req, res) => {
     Post.find({}, (err, posts) => {

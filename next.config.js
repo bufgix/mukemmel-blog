@@ -12,5 +12,8 @@ module.exports = withCSS({
   },
   env: {
     DOMAIN: process.env.DOMAIN
+  },
+  devIndicators: {
+    autoPrerender: false
   }
 });

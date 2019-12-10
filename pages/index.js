@@ -4,6 +4,7 @@ import Particles from "../components/particles";
 import Post from "../components/post";
 import Social from "../components/Social";
 import Head from "../components/Head";
+import { initGA, logPageView } from "../components/googleAnalytics";
 import Typewriter from "typewriter-effect";
 import { Container } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -21,7 +22,13 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    const { notFound } = this.props;
+    console.log(window.GA_INITIALIZED);
+    if (!window.GA_INITIALIZED) {
+      initGA();
+      window.GA_INITIALIZED = true;
+    }
+    logPageView();
+    const { notFound, exit } = this.props;
     if (notFound) {
       Swal.fire({
         icon: "error",
@@ -30,8 +37,17 @@ class Home extends React.Component {
         timerProgressBar: true,
         showConfirmButton: false
       });
-      window.history.replaceState(null, null, window.location.pathname);
     }
+    if (exit) {
+      Swal.fire({
+        icon: "success",
+        text: "Çıkış yaptınız",
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    }
+    window.history.replaceState(null, null, window.location.pathname);
     AOS.init();
     this.setState({
       screenHeight: window.innerHeight / 1.5
@@ -79,8 +95,8 @@ class Home extends React.Component {
 Home.getInitialProps = async ({ req, query }) => {
   const res = await fetch(`${process.env.DOMAIN}/api/posts`);
   const posts = await res.json();
-
-  return { posts, notFound: query.notFound };
+  console.log(query);
+  return { posts, notFound: query.notFound, exit: query.exit };
 };
 
 export default Home;

@@ -1,8 +1,9 @@
 import React from "react";
 import Head from "../../components/Head";
-import fetch from "isomorphic-unfetch";
+import Link from "next/link";
 import { Row, Col, Container, Image, Button } from "react-bootstrap";
 import { FaCheckCircle, FaPlusCircle, FaEye, FaThList } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 
 import CreatePost from "../../components/createPost";
 import ListPost from "../../components/listPosts";
@@ -92,6 +93,10 @@ class Dashboard extends React.Component {
                     <li>
                       <FaEye />
                       <a href="#">Siteyi gör</a>
+                    </li>
+                    <li>
+                      <FiLogOut />
+                      <Link href="/user/logout">Çıkış Yap</Link>
                     </li>
                   </ul>
                 </div>
