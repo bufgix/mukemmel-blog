@@ -1,10 +1,13 @@
 import ReactGA from "react-ga";
 
-export const initGA = () => {
-  ReactGA.initialize("UA-154334049-1");
-};
+class AnalyticsInternal {
+  constructor() {
+    ReactGA.initialize("UA-154334049-1");
+  }
 
-export const logPageView = () => {
-  ReactGA.set({ page: window.location.pathname });
-  ReactGA.pageview(window.location.pathname);
-};
+  logPageView(url) {
+    ReactGA.pageview(url);
+  }
+}
+
+export const Analytics = new AnalyticsInternal();

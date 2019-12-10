@@ -4,7 +4,7 @@ import Particles from "../components/particles";
 import Post from "../components/post";
 import Social from "../components/Social";
 import Head from "../components/Head";
-import { initGA, logPageView } from "../components/googleAnalytics";
+import { Analytics } from "../components/googleAnalytics";
 import Typewriter from "typewriter-effect";
 import { Container } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -19,15 +19,10 @@ class Home extends React.Component {
     this.state = {
       screenHeight: null
     };
+    Analytics.logPageView("/");
   }
 
   componentDidMount() {
-    console.log(window.GA_INITIALIZED);
-    if (!window.GA_INITIALIZED) {
-      initGA();
-      window.GA_INITIALIZED = true;
-    }
-    logPageView();
     const { notFound, exit } = this.props;
     if (notFound) {
       Swal.fire({
