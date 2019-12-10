@@ -4,6 +4,7 @@ import Particles from "../components/particles";
 import Post from "../components/post";
 import Social from "../components/Social";
 import Head from "../components/Head";
+import NotifyController from "../components/notifyController";
 import { Analytics } from "../components/googleAnalytics";
 import Typewriter from "typewriter-effect";
 import { Container } from "react-bootstrap";
@@ -23,26 +24,6 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    const { notFound, exit } = this.props;
-    if (notFound) {
-      Swal.fire({
-        icon: "error",
-        text: "İçerik bulunamadı",
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false
-      });
-    }
-    if (exit) {
-      Swal.fire({
-        icon: "success",
-        text: "Çıkış yaptınız",
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false
-      });
-    }
-    window.history.replaceState(null, null, window.location.pathname);
     AOS.init();
     this.setState({
       screenHeight: window.innerHeight / 1.5
@@ -52,7 +33,7 @@ class Home extends React.Component {
     const { posts } = this.props;
     const { screenHeight } = this.state;
     return (
-      <div>
+      <NotifyController {...this.props}>
         <Head />
         <Particles height={screenHeight} />
         <Container
@@ -60,9 +41,9 @@ class Home extends React.Component {
           style={{ height: screenHeight }}
           className="d-flex flex-column banner text-center"
         >
-          <p className="bn-ov">
+          <div className="bn-ov">
             Make it{" "}
-            <span className="typewriter">
+            <div className="typewriter">
               <Typewriter
                 options={{
                   strings: ["work", "right", "fast"],
@@ -70,9 +51,9 @@ class Home extends React.Component {
                   loop: true
                 }}
               />
-            </span>
+            </div>
             .
-          </p>
+          </div>
           <Social />
         </Container>
         <Container>
@@ -82,7 +63,7 @@ class Home extends React.Component {
         </Container>
 
         <style jsx>{``}</style>
-      </div>
+      </NotifyController>
     );
   }
 }
@@ -90,7 +71,14 @@ class Home extends React.Component {
 Home.getInitialProps = async ({ req, query }) => {
   const res = await fetch(`${process.env.DOMAIN}/api/posts`);
   const posts = await res.json();
-  return { posts, notFound: query.notFound, exit: query.exit };
+  return {
+    posts,
+    events: {
+      notFound: query.notFound,
+      exit: query.exit,
+      create: query.create
+    }
+  };
 };
 
 export default Home;

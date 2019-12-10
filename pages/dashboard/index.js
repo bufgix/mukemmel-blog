@@ -96,7 +96,7 @@ class Dashboard extends React.Component {
                     </li>
                     <li>
                       <FiLogOut />
-                      <Link href="/user/logout">Çıkış Yap</Link>
+                      <a href="/user/logout">Çıkış Yap</a>
                     </li>
                   </ul>
                 </div>

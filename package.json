@@ -23,7 +23,6 @@
     "mongoose": "^5.7.14",
     "next": "9.1.4",
     "passport": "^0.4.0",
-    "passport-google-oauth": "^2.0.0",
     "passport-google-oauth2": "^0.2.0",
     "raw-loader": "^4.0.0",
     "react": "16.12.0",

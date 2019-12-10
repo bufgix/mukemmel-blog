@@ -68,8 +68,7 @@ class CreatePost extends React.Component {
           imageUrl: bannerImage
         })
         .then(res => {
-          console.log(res);
-          Router.push("/");
+          Router.push(`/?create=${true}`);
         })
         .catch(err => {
           console.log(err);
