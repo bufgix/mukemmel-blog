@@ -90,7 +90,6 @@ class Home extends React.Component {
 Home.getInitialProps = async ({ req, query }) => {
   const res = await fetch(`${process.env.DOMAIN}/api/posts`);
   const posts = await res.json();
-  console.log(query);
   return { posts, notFound: query.notFound, exit: query.exit };
 };
 

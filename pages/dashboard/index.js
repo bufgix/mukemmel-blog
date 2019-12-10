@@ -47,7 +47,7 @@ class Dashboard extends React.Component {
     return (
       <div>
         <Head />
-        <Container>
+        <Container className="dashboard-container">
           <Row>
             <Col md={4}>
               <div className="profilebox-border-wrap mt-3 mt-sm-3">
