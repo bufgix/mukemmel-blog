@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import dynamic from "next/dynamic";
 import Router from "next/router";
 import MarkdownIt from "markdown-it";
+import MDIframe from "markdown-it-iframe";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
@@ -30,7 +31,8 @@ class CreatePost extends React.Component {
           } catch (__) {}
         }
         return "";
-      }
+      },
+      html: true
     });
 
     this.editorHeight = 500;
@@ -118,7 +120,7 @@ class CreatePost extends React.Component {
             <span className="text-muted">Tamemen Markdown. Keyfini çıkar</span>
           </h3>
           <hr className="fancy-hr" />
-          <div style={{ height: this.editorHeight }}>
+          <div style={{ height: this.editorHeight }} className="create-post-editor">
             <MdEditor
               value={this.bootContent}
               renderHTML={text => this.mdParser.render(text)}

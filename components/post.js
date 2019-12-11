@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import removeMarkdown from "remove-markdown";
+import { parseDate } from "./utils";
 import { Row, Col, Image } from "react-bootstrap";
 import { FaClock } from "react-icons/fa";
 import textElipsis from "text-ellipsis";
@@ -17,7 +18,7 @@ class Post extends React.Component {
       <div className="post my-4" data-aos="fade-up">
         <h2 className="post-title">{post.title}</h2>
         <p className="text-muted">
-          <FaClock /> {post.date}
+          <FaClock /> {parseDate(post.date)}
         </p>
         <hr className="fancy-hr" />
         <Row>

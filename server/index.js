@@ -83,20 +83,16 @@ nextApp.prepare().then(() => {
   );
 
   const isUserAuthenticated = (req, res, next) => {
-    if (true) {
-      if (req.user) {
-        console.log("Bir user var");
-        if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
-          next();
-        } else {
-          req.logout();
-          res.redirect("/");
-        }
+    if (req.user) {
+      console.log("Bir user var");
+      if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
+        next();
       } else {
-        res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
+        req.logout();
+        res.redirect("/");
       }
     } else {
-      next();
+      res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
     }
   };
 
@@ -135,6 +131,14 @@ nextApp.prepare().then(() => {
     });
   });
 
+  app.post("/api/posts/:id/delete", isUserAuthenticated, (req, res) => {
+    const id = req.params.id;
+    Post.deleteOne({ id: id }, err => {
+      if (err) throw err;
+      res.status(200).json("Success");
+    });
+  });
+
   // TODO: Login required
   app.get("/dashboard", isUserAuthenticated, (req, res) => {
     return handle(req, res);
@@ -157,6 +161,6 @@ nextApp.prepare().then(() => {
 
   app.listen(PORT, err => {
     if (err) throw err;
-    console.log(`Express ready on > ${PORT}`);
+    console.log(`Express ready on asdas > ${PORT}`);
   });
 });

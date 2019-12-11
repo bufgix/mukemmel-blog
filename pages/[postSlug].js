@@ -4,9 +4,11 @@ import { Container, Image } from "react-bootstrap";
 import { FaClock } from "react-icons/fa";
 import Social from "../components/Social";
 import Head from "../components/Head";
+import { parseDate } from "../components/utils";
 import { Analytics } from "../components/googleAnalytics";
 import fetch from "isomorphic-unfetch";
 import hljs from "highlight.js";
+import $ from "jquery";
 
 import "highlight.js/styles/atelier-plateau-dark.css";
 import "../pages/index.css";
@@ -18,10 +20,10 @@ class BlogPost extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window.location.pathname);
     Analytics.logPageView(window.location.pathname);
     hljs.initHighlighting.called = false;
     hljs.initHighlighting();
+    $("iframe").wrap("<div class='iframe-container' />");
   }
 
   render() {
@@ -34,11 +36,11 @@ class BlogPost extends React.Component {
             <Image src={post.imageUrl} fluid />
             <h1 className="blog-title mt-2">{post.title}</h1>
             <p className="text-muted">
-              <FaClock /> {post.date}
+              <FaClock /> {parseDate(post.date)}
             </p>
             <hr className="fancy-hr" />
             <div className="blog-content">
-              <ReactMarkdown source={post.details} />
+              <ReactMarkdown source={post.details} escapeHtml={false} />
             </div>
           </div>
         </Container>

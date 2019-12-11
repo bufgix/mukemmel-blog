@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "../../components/Head";
-import Link from "next/link";
+import fetch from "isomorphic-unfetch";
 import { Row, Col, Container, Image, Button } from "react-bootstrap";
 import { FaCheckCircle, FaPlusCircle, FaEye, FaThList } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
@@ -10,6 +10,7 @@ import ListPost from "../../components/listPosts";
 
 import "./dashboard.css";
 import "../index.css";
+import Axios from "axios";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -23,8 +24,9 @@ class Dashboard extends React.Component {
 
   renderRightSide() {
     const { currentPage, prevTitle, prevMdContent } = this.state;
+    const { posts } = this.props;
     if (currentPage === "all") {
-      return <ListPost />;
+      return <ListPost posts={posts} />;
     } else if (currentPage == "create") {
       return (
         <CreatePost
@@ -43,7 +45,20 @@ class Dashboard extends React.Component {
     });
   }
 
+  deletePost(postId) {
+    Axios.get(`${process.env.DOMAIN}/${postId}/delete`)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   render() {
+    const {
+      user: { picture, displayName }
+    } = this.props;
     return (
       <div>
         <Head />
@@ -54,14 +69,14 @@ class Dashboard extends React.Component {
                 <div className="profilebox ">
                   <div className="profilebox-profile-img text-center m-1">
                     <Image
-                      src="https://lh3.googleusercontent.com/a-/AAuE7mAv79oyT2WWIe4GY8AhBgFFzLIcAsjV5XQW-qsnXA"
+                      src={picture}
                       roundedCircle
                       height={150}
                       width={150}
                     />
                   </div>
-                  <h5 className="profilebox-name text-center">
-                    Faruk Oruç <FaCheckCircle />
+                  <h5 className="profilebox-name text-center mt-2">
+                    {displayName} <FaCheckCircle />
                   </h5>
                   <ul>
                     <li>
@@ -111,5 +126,11 @@ class Dashboard extends React.Component {
     );
   }
 }
+
+Dashboard.getInitialProps = async ({ req }) => {
+  const res = await fetch(`${process.env.DOMAIN}/api/posts`);
+  const posts = await res.json();
+  return { user: req.user, posts };
+};
 
 export default Dashboard;
