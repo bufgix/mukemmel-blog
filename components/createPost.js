@@ -2,7 +2,6 @@ import React, { createRef } from "react";
 import dynamic from "next/dynamic";
 import Router from "next/router";
 import MarkdownIt from "markdown-it";
-import MDIframe from "markdown-it-iframe";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
