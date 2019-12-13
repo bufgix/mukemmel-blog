@@ -41,7 +41,7 @@ nextApp.prepare().then(() => {
 
   // Pagination
   // TODO change limit
-  app.use(paginate.middleware(3, 50));
+  app.use(paginate.middleware(10, 50));
   // Session
   app.use(
     session({
