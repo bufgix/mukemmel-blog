@@ -7,20 +7,59 @@ import Head from "../components/Head";
 import NotifyController from "../components/notifyController";
 import { Analytics } from "../components/googleAnalytics";
 import Typewriter from "typewriter-effect";
-import { Container } from "react-bootstrap";
-import Swal from "sweetalert2";
+import { Container, Button } from "react-bootstrap";
+import { FaArrowDown } from "react-icons/fa";
 import AOS from "aos";
 
 import "./index.css";
 import "aos/dist/aos.css";
+import Axios from "axios";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      screenHeight: null
+      screenHeight: null,
+      posts: props.postsData.posts,
+      hasMore: props.postsData.hasMore,
+      page: 1
     };
     Analytics.logPageView("/");
+
+    this.loadMore = this.loadMore.bind(this);
+    this.iterPostApiCall = this.iterPostApiCall.bind(this);
+  }
+
+  loadMore() {
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => {
+        this.iterPostApiCall();
+      }
+    );
+  }
+
+  iterPostApiCall() {
+    const { page, posts, hasMore } = this.state;
+    Axios.get(`${process.env.DOMAIN}/api/posts?page=${page}`)
+      .then(res => {
+        if (hasMore) {
+          this.setState(
+            {
+              posts: posts.concat(res.data.posts),
+              hasMore: res.data.hasMore
+            },
+            () => {
+              scrollBy(0, 50);
+            }
+          );
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   componentDidMount() {
@@ -30,10 +69,9 @@ class Home extends React.Component {
     });
   }
   render() {
-    const { posts } = this.props;
-    const { screenHeight } = this.state;
+    const { screenHeight, posts, hasMore } = this.state;
     return (
-      <NotifyController {...this.props}>
+      <NotifyController events={this.props.events}>
         <Head />
         <Particles height={screenHeight} />
         <Container
@@ -58,9 +96,22 @@ class Home extends React.Component {
         </Container>
         <Container>
           {posts.map((post, index) => (
-            <Post post={post} key={index} />
+            <Post post={post} key={index} dataAos="zoom-in" />
           ))}
         </Container>
+        {hasMore ? (
+          <Container className="text-center my-2 mb-5">
+            <div
+              className="load-more"
+              onClick={e => {
+                e.preventDefault();
+                this.loadMore();
+              }}
+            >
+              Daha fazla <FaArrowDown />
+            </div>
+          </Container>
+        ) : null}
 
         <style jsx>{``}</style>
       </NotifyController>
@@ -69,10 +120,10 @@ class Home extends React.Component {
 }
 
 Home.getInitialProps = async ({ req, query }) => {
-  const res = await fetch(`${process.env.DOMAIN}/api/posts`);
-  const posts = await res.json();
+  const res = await fetch(`${process.env.DOMAIN}/api/posts?page=1`);
+  const postsData = await res.json();
   return {
-    posts,
+    postsData,
     events: {
       notFound: query.notFound,
       exit: query.exit,

@@ -1,4 +1,5 @@
 const express = require("express");
+const paginate = require("express-paginate");
 const next = require("next");
 const bodyParser = require("body-parser");
 const passport = require("passport");
@@ -38,6 +39,9 @@ nextApp.prepare().then(() => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
+  // Pagination
+  // TODO change limit
+  app.use(paginate.middleware(3, 50));
   // Session
   app.use(
     session({
@@ -108,9 +112,26 @@ nextApp.prepare().then(() => {
   });
 
   app.get("/api/posts", (req, res) => {
+    Post.find({})
+      .limit(req.query.limit)
+      .skip(req.skip)
+      .lean()
+      .exec((err, posts) => {
+        Post.countDocuments({}, (err, postsCount) => {
+          const pageCount = Math.ceil(postsCount / req.query.limit);
+
+          res.json({
+            hasMore: paginate.hasNextPages(req)(pageCount),
+            posts
+          });
+        });
+      });
+  });
+
+  // TODO: fix this function
+  app.get("/api/posts/dashboard", (req, res) => {
     Post.find({}, (err, posts) => {
-      if (err) throw err;
-      res.status(200).json(posts);
+      res.json({ posts: posts });
     });
   });
 

@@ -13,9 +13,9 @@ class Post extends React.Component {
   }
 
   render() {
-    const { post } = this.props;
+    const { post, dataAos } = this.props;
     return (
-      <div className="post my-4" data-aos="fade-up">
+      <div className="post my-4" data-aos={dataAos}>
         <h2 className="post-title">{post.title}</h2>
         <p className="text-muted">
           <FaClock /> {parseDate(post.date)}
@@ -46,7 +46,12 @@ Post.propTypes = {
     details: PropTypes.string.isRequired,
     slug: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  dataAos: PropTypes.string
+};
+
+Post.defaultProps = {
+  dataAos: "fade-up"
 };
 
 export default Post;

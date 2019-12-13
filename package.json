@@ -17,6 +17,7 @@
     "dotenv": "^8.2.0",
     "emoji-dictionary": "^1.0.10",
     "express": "^4.17.1",
+    "express-paginate": "^1.0.0",
     "express-session": "^1.17.0",
     "highlight.js": "^9.16.2",
     "isomorphic-unfetch": "^3.0.0",

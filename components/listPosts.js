@@ -37,10 +37,10 @@ class ListPost extends React.Component {
 
   getPosts() {
     axios
-      .get(`${process.env.DOMAIN}/api/posts`)
+      .get(`${process.env.DOMAIN}/api/posts/dashboard`) // Todo fix this
       .then(res => {
         this.setState({
-          posts: res.data
+          posts: res.data.posts
         });
       })
       .catch(err => {
