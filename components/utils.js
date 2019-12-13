@@ -1,3 +1,5 @@
+import emoji from "emoji-dictionary";
+
 export const parseDate = dateStr => {
   const d = new Date(dateStr);
   let month = "" + (d.getMonth() + 1);
@@ -9,3 +11,9 @@ export const parseDate = dateStr => {
 
   return [year, month, day].join("-");
 };
+
+export const emojiSupport = text =>
+  text.value.replace(/:\w+:/gi, name => {
+    const code = emoji.getUnicode(name);
+    return code || "";
+  });

@@ -13,6 +13,10 @@
   height: 100%;
 }
 
+.blog hr {
+  background-color: #E0E0E0;
+}
+
 @media (min-width: 1200px) {
   .blog-container {
     max-width: 960px !important;

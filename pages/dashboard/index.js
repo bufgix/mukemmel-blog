@@ -1,6 +1,5 @@
 import React from "react";
 import Head from "../../components/Head";
-import fetch from "isomorphic-unfetch";
 import { Row, Col, Container, Image, Button } from "react-bootstrap";
 import { FaCheckCircle, FaPlusCircle, FaEye, FaThList } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
@@ -10,7 +9,6 @@ import ListPost from "../../components/listPosts";
 
 import "./dashboard.css";
 import "../index.css";
-import Axios from "axios";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -26,7 +24,7 @@ class Dashboard extends React.Component {
     const { currentPage, prevTitle, prevMdContent } = this.state;
     const { posts } = this.props;
     if (currentPage === "all") {
-      return <ListPost posts={posts} />;
+      return <ListPost />;
     } else if (currentPage == "create") {
       return (
         <CreatePost
@@ -43,16 +41,6 @@ class Dashboard extends React.Component {
       prevTitle,
       prevMdContent
     });
-  }
-
-  deletePost(postId) {
-    Axios.get(`${process.env.DOMAIN}/${postId}/delete`)
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
   }
 
   render() {
@@ -107,7 +95,7 @@ class Dashboard extends React.Component {
                     </li>
                     <li>
                       <FaEye />
-                      <a href="#">Siteyi gör</a>
+                      <a href="/" target="_blank">Siteyi gör</a>
                     </li>
                     <li>
                       <FiLogOut />
@@ -128,9 +116,7 @@ class Dashboard extends React.Component {
 }
 
 Dashboard.getInitialProps = async ({ req }) => {
-  const res = await fetch(`${process.env.DOMAIN}/api/posts`);
-  const posts = await res.json();
-  return { user: req.user, posts };
+  return { user: req.user };
 };
 
 export default Dashboard;

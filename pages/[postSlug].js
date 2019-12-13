@@ -4,7 +4,7 @@ import { Container, Image } from "react-bootstrap";
 import { FaClock } from "react-icons/fa";
 import Social from "../components/Social";
 import Head from "../components/Head";
-import { parseDate } from "../components/utils";
+import { parseDate, emojiSupport } from "../components/utils";
 import { Analytics } from "../components/googleAnalytics";
 import fetch from "isomorphic-unfetch";
 import hljs from "highlight.js";
@@ -40,7 +40,11 @@ class BlogPost extends React.Component {
             </p>
             <hr className="fancy-hr" />
             <div className="blog-content">
-              <ReactMarkdown source={post.details} escapeHtml={false} />
+              <ReactMarkdown
+                source={post.details}
+                escapeHtml={false}
+                renderers={{ text: emojiSupport }}
+              />
             </div>
           </div>
         </Container>

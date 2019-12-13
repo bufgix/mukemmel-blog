@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import dynamic from "next/dynamic";
 import Router from "next/router";
 import MarkdownIt from "markdown-it";
+import MarkdownItEmoji from "markdown-it-emoji";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
@@ -18,7 +19,9 @@ class CreatePost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: "",
+      content:
+        props.content ||
+        "`![Banner](<img_url>)`\nBunu unutma! içeriğin giriş resmi olacak.",
       title: props.title
     };
 
@@ -32,12 +35,8 @@ class CreatePost extends React.Component {
         return "";
       },
       html: true
-    });
-
+    }).use(MarkdownItEmoji);
     this.editorHeight = 500;
-    this.bootContent =
-      props.content ||
-      "`![Banner](<img_ul>)`\nBunu unutma! içeriğin giriş resmi olacak.";
   }
 
   componentDidMount() {
@@ -91,7 +90,7 @@ class CreatePost extends React.Component {
     save(title, content);
   }
   render() {
-    const { title } = this.state;
+    const { title, content } = this.state;
     return (
       <div className="create-post mb-4">
         <form onSubmit={this.sendPost.bind(this)}>
@@ -119,9 +118,12 @@ class CreatePost extends React.Component {
             <span className="text-muted">Tamemen Markdown. Keyfini çıkar</span>
           </h3>
           <hr className="fancy-hr" />
-          <div style={{ height: this.editorHeight }} className="create-post-editor">
+          <div
+            style={{ height: this.editorHeight }}
+            className="create-post-editor"
+          >
             <MdEditor
-              value={this.bootContent}
+              value={content}
               renderHTML={text => this.mdParser.render(text)}
               config={{
                 markdownClass: "darkMd",

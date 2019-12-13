@@ -6,7 +6,6 @@ const GoogleStrategy = require("passport-google-oauth2");
 const session = require("express-session");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
-const slugify = require("slugify");
 var cors = require("cors");
 // Calling models
 const Post = require("./models/post");
@@ -84,7 +83,6 @@ nextApp.prepare().then(() => {
 
   const isUserAuthenticated = (req, res, next) => {
     if (req.user) {
-      console.log("Bir user var");
       if (req.user.id === process.env.GOOGLE_ADMIN_ID) {
         next();
       } else {
@@ -119,21 +117,18 @@ nextApp.prepare().then(() => {
   // TODO: login_required
   app.post("/api/posts/create", isUserAuthenticated, (req, res) => {
     const { title, content, imageUrl } = req.body;
-    let post = new Post({
-      title: title,
-      details: content,
-      imageUrl: imageUrl,
-      slug: slugify(title)
-    });
-    post.save(err => {
-      if (err) throw err;
-      res.status(200).json(post);
-    });
+    Post.create(
+      { title: title, details: content, imageUrl: imageUrl },
+      (err, post) => {
+        if (err) throw err;
+        res.status(200).json(post);
+      }
+    );
   });
 
-  app.post("/api/posts/:id/delete", isUserAuthenticated, (req, res) => {
-    const id = req.params.id;
-    Post.deleteOne({ id: id }, err => {
+  app.delete("/api/posts/:slug", isUserAuthenticated, (req, res) => {
+    const slug = req.params.slug;
+    Post.deleteOne({ slug: slug }, err => {
       if (err) throw err;
       res.status(200).json("Success");
     });
@@ -161,6 +156,6 @@ nextApp.prepare().then(() => {
 
   app.listen(PORT, err => {
     if (err) throw err;
-    console.log(`Express ready on asdas > ${PORT}`);
+    console.log(`Express ready on > ${PORT}`);
   });
 });
