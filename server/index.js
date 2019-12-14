@@ -112,13 +112,15 @@ nextApp.prepare().then(() => {
   });
 
   app.get("/api/posts", (req, res) => {
-    Post.find({})
+    Post.find({ isDraft: false })
       .limit(req.query.limit)
       .skip(req.skip)
       .lean()
       .sort("-date")
       .exec((err, posts) => {
+        if (err) throw err;
         Post.countDocuments({}, (err, postsCount) => {
+          if (err) throw err;
           const pageCount = Math.ceil(postsCount / req.query.limit);
 
           res.json({
@@ -136,11 +138,10 @@ nextApp.prepare().then(() => {
     });
   });
 
-
   app.post("/api/posts/create", isUserAuthenticated, (req, res) => {
-    const { title, content, imageUrl } = req.body;
+    const { title, content, imageUrl, isDraft } = req.body;
     Post.create(
-      { title: title, details: content, imageUrl: imageUrl },
+      { title: title, details: content, imageUrl: imageUrl, isDraft },
       (err, post) => {
         if (err) throw err;
         res.status(200).json(post);
@@ -158,17 +159,16 @@ nextApp.prepare().then(() => {
 
   app.post("/api/posts/:slug/update", isUserAuthenticated, (req, res) => {
     const slug = req.params.slug;
-    const { title, content, imageUrl } = req.body;
+    const { title, content, imageUrl, isDraft } = req.body;
     Post.updateOne(
       { slug: slug },
-      { title, details: content, imageUrl },
+      { title, details: content, imageUrl, isDraft },
       (err, status) => {
         if (err) throw err;
         res.status(200).json(status);
       }
     );
   });
-
 
   app.get("/dashboard", isUserAuthenticated, (req, res) => {
     return handle(req, res);

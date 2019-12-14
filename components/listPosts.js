@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { TiWarning } from "react-icons/ti";
 
 class ListPost extends React.Component {
   constructor(props) {
@@ -61,7 +62,9 @@ class ListPost extends React.Component {
           {posts.map((post, index) => (
             <li key={index} className="list-post-item-wrapper">
               <div className="list-post-item d-flex">
-                <div className="mr-auto">{post.title}</div>
+                <div className="mr-auto">
+                  {post.isDraft ? <TiWarning /> : null} {post.title}
+                </div>
                 <ul>
                   <li>
                     <a

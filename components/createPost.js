@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import Router from "next/router";
 import MarkdownIt from "markdown-it";
 import MarkdownItEmoji from "markdown-it-emoji";
+import { Form } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
@@ -23,7 +24,8 @@ class CreatePost extends React.Component {
         ? props.content ||
           "`![Banner](<img_url>)`\nBunu unutma! içeriğin giriş resmi olacak."
         : props.updatePost.details,
-      title: !props.isUpdate ? props.title : props.updatePost.title
+      title: !props.isUpdate ? props.title : props.updatePost.title,
+      isDraft: !props.isUpdate ? false : props.updatePost.isDraft
     };
 
     this.mdParser = new MarkdownIt({
@@ -59,7 +61,7 @@ class CreatePost extends React.Component {
 
   sendPost(e) {
     e.preventDefault();
-    const { content, title } = this.state;
+    const { content, title, isDraft } = this.state;
     const { isUpdate, updatePost } = this.props;
     const bannerImage = this.getBannerImageUrl();
     const apiUrl = isUpdate
@@ -70,7 +72,8 @@ class CreatePost extends React.Component {
         .post(apiUrl, {
           title: title,
           content: content.replace(/^!\[Banner\]\((.+)\)/, ""),
-          imageUrl: bannerImage
+          imageUrl: bannerImage,
+          isDraft
         })
         .then(res => {
           Router.push(`/?${isUpdate ? "update" : "create"}=${true}`);
@@ -96,7 +99,7 @@ class CreatePost extends React.Component {
   }
 
   render() {
-    const { title, content } = this.state;
+    const { title, content, isDraft } = this.state;
     return (
       <div className="create-post mb-4">
         <form onSubmit={this.sendPost.bind(this)}>
@@ -143,9 +146,23 @@ class CreatePost extends React.Component {
               onChange={this.handleEditorChange.bind(this)}
             />
           </div>
-          <button type="submit">
-            <a className="my-4">Yayınla</a>
-          </button>
+          <div className="d-flex justify-content-between">
+            <Form.Check
+              type="switch"
+              label="Taslak"
+              id="draft"
+              className="mt-2"
+              checked={isDraft}
+              onChange={() => {
+                this.setState({
+                  isDraft: !isDraft
+                });
+              }}
+            />
+            <button type="submit">
+              <a className="my-4 pub-btn">Yayınla</a>
+            </button>
+          </div>
         </form>
       </div>
     );

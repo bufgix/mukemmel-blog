@@ -9,6 +9,7 @@ const PostSchema = new Schema({
   details: { type: String, required: true },
   date: { type: Date, default: Date.now },
   imageUrl: { type: String, required: true },
+  isDraft: {type: Boolean, default: false},
   slug: {type: String, slug: "title", unique: true}
 });
 

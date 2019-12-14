@@ -39,6 +39,10 @@
   font-size: 24px;
 }
 
+.pub-btn {
+  font-size: 24px;
+}
+
 /* Create post styles */
 .darkMd {
   background-color: #181818 !important;
