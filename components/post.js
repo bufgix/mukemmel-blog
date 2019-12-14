@@ -26,7 +26,7 @@ class Post extends React.Component {
             <Image src={post.imageUrl} fluid />
           </Col>
           <Col md={8} className="align-items-end">
-            <div className="post-content">
+            <div className="post-content mt-2">
               {textElipsis(removeMarkdown(post.details), 200)}{" "}
               <Link href={`/${post.slug}`}>
                 <a className="read-more">Devamını oku</a>
