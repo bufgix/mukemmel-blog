@@ -16,21 +16,37 @@ class Dashboard extends React.Component {
     this.state = {
       currentPage: "all", // "create"
       prevTitle: "",
-      prevMdContent: ""
+      prevMdContent: "",
+      postWillUpdate: null
     };
   }
 
   renderRightSide() {
-    const { currentPage, prevTitle, prevMdContent } = this.state;
-    const { posts } = this.props;
+    const {
+      currentPage,
+      prevTitle,
+      prevMdContent,
+      postWillUpdate
+    } = this.state;
+
     if (currentPage === "all") {
-      return <ListPost />;
-    } else if (currentPage == "create") {
+      return <ListPost update={this.updatePost.bind(this)} />;
+    } else if (currentPage === "create") {
       return (
         <CreatePost
           save={this.save.bind(this)}
           title={prevTitle}
           content={prevMdContent}
+        />
+      );
+    } else if (currentPage === "update") {
+      postWillUpdate.details =
+        `![Banner](${postWillUpdate.imageUrl})\n` + postWillUpdate.details;
+      return (
+        <CreatePost
+          save={this.save.bind(this)}
+          updatePost={postWillUpdate}
+          isUpdate={true}
         />
       );
     }
@@ -43,9 +59,17 @@ class Dashboard extends React.Component {
     });
   }
 
+  updatePost(post) {
+    this.setState({
+      currentPage: "update",
+      postWillUpdate: post
+    });
+  }
+
   render() {
     const {
-      user: { picture, displayName }
+      user: { picture, displayName },
+      events
     } = this.props;
     return (
       <div>
@@ -95,7 +119,9 @@ class Dashboard extends React.Component {
                     </li>
                     <li>
                       <FaEye />
-                      <a href="/" target="_blank">Siteyi gör</a>
+                      <a href="/" target="_blank">
+                        Siteyi gör
+                      </a>
                     </li>
                     <li>
                       <FiLogOut />
@@ -115,8 +141,10 @@ class Dashboard extends React.Component {
   }
 }
 
-Dashboard.getInitialProps = async ({ req }) => {
-  return { user: req.user };
+Dashboard.getInitialProps = async ({ req, query }) => {
+  return {
+    user: req.user
+  };
 };
 
 export default Dashboard;

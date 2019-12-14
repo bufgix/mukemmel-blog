@@ -22,6 +22,20 @@ const EVENT_OPTIONS = {
     timer: 2000,
     timerProgressBar: true,
     showConfirmButton: false
+  },
+  update: {
+    icon: "success",
+    text: "İçerik güncellendi",
+    timer: 2000,
+    timerProgressBar: true,
+    showConfirmButton: false
+  },
+  wrongUser: {
+    icon: "error",
+    text: "Yönetim paneline sadece yönetici girebilir",
+    timer: 3000,
+    timerProgressBar: true,
+    showConfirmButton: false
   }
 };
 

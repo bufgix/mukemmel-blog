@@ -127,7 +127,9 @@ Home.getInitialProps = async ({ req, query }) => {
     events: {
       notFound: query.notFound,
       exit: query.exit,
-      create: query.create
+      create: query.create,
+      update: query.update,
+      wrongUser: query.wrongUser
     }
   };
 };

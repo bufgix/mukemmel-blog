@@ -19,10 +19,11 @@ class CreatePost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      content:
-        props.content ||
-        "`![Banner](<img_url>)`\nBunu unutma! içeriğin giriş resmi olacak.",
-      title: props.title
+      content: !props.isUpdate
+        ? props.content ||
+          "`![Banner](<img_url>)`\nBunu unutma! içeriğin giriş resmi olacak."
+        : props.updatePost.details,
+      title: !props.isUpdate ? props.title : props.updatePost.title
     };
 
     this.mdParser = new MarkdownIt({
@@ -59,16 +60,20 @@ class CreatePost extends React.Component {
   sendPost(e) {
     e.preventDefault();
     const { content, title } = this.state;
+    const { isUpdate, updatePost } = this.props;
     const bannerImage = this.getBannerImageUrl();
+    const apiUrl = isUpdate
+      ? `${process.env.DOMAIN}/api/posts/${updatePost.slug}/update`
+      : `${process.env.DOMAIN}/api/posts/create`;
     if (bannerImage) {
       axios
-        .post(`${process.env.DOMAIN}/api/posts/create`, {
+        .post(apiUrl, {
           title: title,
           content: content.replace(/^!\[Banner\]\((.+)\)/, ""),
           imageUrl: bannerImage
         })
         .then(res => {
-          Router.push(`/?create=${true}`);
+          Router.push(`/?${isUpdate ? "update" : "create"}=${true}`);
         })
         .catch(err => {
           console.log(err);
@@ -89,6 +94,7 @@ class CreatePost extends React.Component {
     const { content, title } = this.state;
     save(title, content);
   }
+
   render() {
     const { title, content } = this.state;
     return (
@@ -147,9 +153,25 @@ class CreatePost extends React.Component {
 }
 
 CreatePost.propTypes = {
-  save: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired
+  save: PropTypes.func,
+  title: PropTypes.string,
+  content: PropTypes.string,
+
+  isUpdate: PropTypes.bool,
+  updatePost: PropTypes.shape({
+    title: PropTypes.string,
+    content: PropTypes.string,
+    imageUrl: PropTypes.string,
+    slug: PropTypes.string
+  })
+};
+
+CreatePost.defaultProps = {
+  isUpdate: false,
+  updatePost: null,
+  save: null,
+  title: null,
+  content: null
 };
 
 export default CreatePost;

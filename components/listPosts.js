@@ -54,6 +54,7 @@ class ListPost extends React.Component {
 
   render() {
     const { posts } = this.state;
+    const { update } = this.props;
     return (
       <div className="list-post-container">
         <ul className="list-post">
@@ -63,7 +64,13 @@ class ListPost extends React.Component {
                 <div className="mr-auto">{post.title}</div>
                 <ul>
                   <li>
-                    <a href="#" className="edit">
+                    <a
+                      href="#"
+                      className="edit"
+                      onClick={() => {
+                        update(post);
+                      }}
+                    >
                       Düzenle
                     </a>
                   </li>

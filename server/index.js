@@ -41,7 +41,7 @@ nextApp.prepare().then(() => {
 
   // Pagination
   // TODO change limit
-  app.use(paginate.middleware(10, 50));
+  app.use(paginate.middleware(5, 50));
   // Session
   app.use(
     session({
@@ -91,7 +91,7 @@ nextApp.prepare().then(() => {
         next();
       } else {
         req.logout();
-        res.redirect("/");
+        res.redirect("/?wrongUser=true");
       }
     } else {
       res.redirect("/auth/google"); // TODO: Bunu daha sonra değiştir
@@ -116,6 +116,7 @@ nextApp.prepare().then(() => {
       .limit(req.query.limit)
       .skip(req.skip)
       .lean()
+      .sort("-date")
       .exec((err, posts) => {
         Post.countDocuments({}, (err, postsCount) => {
           const pageCount = Math.ceil(postsCount / req.query.limit);
@@ -135,7 +136,7 @@ nextApp.prepare().then(() => {
     });
   });
 
-  // TODO: login_required
+
   app.post("/api/posts/create", isUserAuthenticated, (req, res) => {
     const { title, content, imageUrl } = req.body;
     Post.create(
@@ -155,7 +156,20 @@ nextApp.prepare().then(() => {
     });
   });
 
-  // TODO: Login required
+  app.post("/api/posts/:slug/update", isUserAuthenticated, (req, res) => {
+    const slug = req.params.slug;
+    const { title, content, imageUrl } = req.body;
+    Post.updateOne(
+      { slug: slug },
+      { title, details: content, imageUrl },
+      (err, status) => {
+        if (err) throw err;
+        res.status(200).json(status);
+      }
+    );
+  });
+
+
   app.get("/dashboard", isUserAuthenticated, (req, res) => {
     return handle(req, res);
   });
