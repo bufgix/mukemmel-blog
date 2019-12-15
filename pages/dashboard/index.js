@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "../../components/Head";
+import fetch from "isomorphic-unfetch";
 import { Row, Col, Container, Image, Button } from "react-bootstrap";
 import { FaCheckCircle, FaPlusCircle, FaEye, FaThList } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
@@ -8,6 +9,7 @@ import CreatePost from "../../components/createPost";
 import ListPost from "../../components/listPosts";
 
 import "./dashboard.css";
+import "./tagstyle.css";
 import "../index.css";
 
 class Dashboard extends React.Component {
@@ -34,6 +36,7 @@ class Dashboard extends React.Component {
     } else if (currentPage === "create") {
       return (
         <CreatePost
+          tags={this.props.tags}
           save={this.save.bind(this)}
           title={prevTitle}
           content={prevMdContent}
@@ -44,6 +47,7 @@ class Dashboard extends React.Component {
         `![Banner](${postWillUpdate.imageUrl})\n` + postWillUpdate.details;
       return (
         <CreatePost
+          tags={this.props.tags}
           save={this.save.bind(this)}
           updatePost={postWillUpdate}
           isUpdate={true}
@@ -69,7 +73,6 @@ class Dashboard extends React.Component {
   render() {
     const {
       user: { picture, displayName },
-      events
     } = this.props;
     return (
       <div>
@@ -142,8 +145,10 @@ class Dashboard extends React.Component {
 }
 
 Dashboard.getInitialProps = async ({ req, query }) => {
+  const tags = await (await fetch(`${process.env.DOMAIN}/api/tags`)).json();
   return {
-    user: req.user
+    user: req.user,
+    tags
   };
 };
 

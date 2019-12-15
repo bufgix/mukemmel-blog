@@ -41,7 +41,7 @@ class ListPost extends React.Component {
       .get(`${process.env.DOMAIN}/api/posts/dashboard`) // Todo fix this
       .then(res => {
         this.setState({
-          posts: res.data.posts
+          posts: res.data
         });
       })
       .catch(err => {
