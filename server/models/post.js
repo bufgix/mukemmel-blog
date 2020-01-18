@@ -9,7 +9,9 @@ const PostSchema = new Schema({
   details: { type: String, required: true },
   date: { type: Date, default: Date.now },
   imageUrl: { type: String, required: true },
-  slug: {type: String, slug: "title", unique: true}
+  isDraft: {type: Boolean, default: false},
+  slug: {type: String, slug: "title", unique: true},
+  tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}]
 });
 
 module.exports = mongoose.model("Post", PostSchema);

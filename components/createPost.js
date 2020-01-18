@@ -3,9 +3,11 @@ import dynamic from "next/dynamic";
 import Router from "next/router";
 import MarkdownIt from "markdown-it";
 import MarkdownItEmoji from "markdown-it-emoji";
+import { Form } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
+import ReactTags from "react-tag-autocomplete";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false
@@ -23,9 +25,13 @@ class CreatePost extends React.Component {
         ? props.content ||
           "`![Banner](<img_url>)`\nBunu unutma! içeriğin giriş resmi olacak."
         : props.updatePost.details,
-      title: !props.isUpdate ? props.title : props.updatePost.title
-    };
+      title: !props.isUpdate ? props.title : props.updatePost.title,
+      isDraft: !props.isUpdate ? false : props.updatePost.isDraft,
 
+      tags: !props.isUpdate ? [] : props.updatePost.tags,
+      suggestions: props.tags
+    };
+    
     this.mdParser = new MarkdownIt({
       highlight: function(str, lang) {
         if (lang && hljs.getLanguage(lang)) {
@@ -38,6 +44,17 @@ class CreatePost extends React.Component {
       html: true
     }).use(MarkdownItEmoji);
     this.editorHeight = 500;
+  }
+
+  handleDelete(i) {
+    const tags = this.state.tags.slice(0);
+    tags.splice(i, 1);
+    this.setState({ tags });
+  }
+
+  handleAddition(tag) {
+    const tags = [].concat(this.state.tags, tag);
+    this.setState({ tags });
   }
 
   componentDidMount() {
@@ -59,7 +76,7 @@ class CreatePost extends React.Component {
 
   sendPost(e) {
     e.preventDefault();
-    const { content, title } = this.state;
+    const { content, title, isDraft, tags } = this.state;
     const { isUpdate, updatePost } = this.props;
     const bannerImage = this.getBannerImageUrl();
     const apiUrl = isUpdate
@@ -70,7 +87,9 @@ class CreatePost extends React.Component {
         .post(apiUrl, {
           title: title,
           content: content.replace(/^!\[Banner\]\((.+)\)/, ""),
-          imageUrl: bannerImage
+          imageUrl: bannerImage,
+          isDraft,
+          tags
         })
         .then(res => {
           Router.push(`/?${isUpdate ? "update" : "create"}=${true}`);
@@ -96,7 +115,7 @@ class CreatePost extends React.Component {
   }
 
   render() {
-    const { title, content } = this.state;
+    const { title, content, isDraft } = this.state;
     return (
       <div className="create-post mb-4">
         <form onSubmit={this.sendPost.bind(this)}>
@@ -118,6 +137,17 @@ class CreatePost extends React.Component {
             name="title"
             placeholder="Dünaynın en iyi başlığı"
             required
+          />
+          <h3 className="create-post-title">
+            Etiketler{" "}
+            <span className="text-muted">Bu içerik nelerden bahsediyor?</span>
+          </h3>
+          <hr className="fancy-hr" />
+          <ReactTags
+            tags={this.state.tags}
+            suggestions={this.state.suggestions}
+            handleDelete={this.handleDelete.bind(this)}
+            handleAddition={this.handleAddition.bind(this)}
           />
           <h3>
             İçerik{" "}
@@ -143,9 +173,23 @@ class CreatePost extends React.Component {
               onChange={this.handleEditorChange.bind(this)}
             />
           </div>
-          <button type="submit">
-            <a className="my-4">Yayınla</a>
-          </button>
+          <div className="d-flex justify-content-between">
+            <Form.Check
+              type="switch"
+              label="Taslak"
+              id="draft"
+              className="mt-2"
+              checked={isDraft}
+              onChange={() => {
+                this.setState({
+                  isDraft: !isDraft
+                });
+              }}
+            />
+            <button type="submit">
+              <a className="my-4 pub-btn">Yayınla</a>
+            </button>
+          </div>
         </form>
       </div>
     );
@@ -156,6 +200,7 @@ CreatePost.propTypes = {
   save: PropTypes.func,
   title: PropTypes.string,
   content: PropTypes.string,
+  tags: PropTypes.array.isRequired,
 
   isUpdate: PropTypes.bool,
   updatePost: PropTypes.shape({
@@ -169,6 +214,7 @@ CreatePost.propTypes = {
 CreatePost.defaultProps = {
   isUpdate: false,
   updatePost: null,
+
   save: null,
   title: null,
   content: null
