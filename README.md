@@ -60,7 +60,7 @@ diyerek geliştirici sunucusu çalıştırın
 
 👤 **bufgix**
 
-* Website: https://bufgix.space
+* Website: http://www.bufgix.space/
 * Twitter: [@bufgix](https://twitter.com/bufgix)
 
 ## Show your support
