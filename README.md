@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to bufgix-blog 👋</h1>
+<h1 align="center">bufgix-blog'a hoşgeldiniz 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.1.2-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
@@ -13,17 +13,29 @@
 
 ### 🏠 [Homepage](http://bufgix.space)
 
-## Install
+## Yükleme
+Gerekli bağımlılıları yükleyin
 
 ```sh
-npm install
+yarn
 ```
 
-## Usage
+## Kullanımı
 
-```sh
-npm run dev
-```
+Blog çalışabilmesi için bazı ortam değişkenlerine ihtiyaç duyar
+
+| Değer  | Açıklama  |
+|---|---|
+| DOMAIN  |  Uygulamayı yayınladığınız sunucu adresi. Localhost için (http://``localhost:3000``) |
+| GOOGLE_ADMIN_ID  |  Yönetici google hesabının id değeri |
+| GOOGLE_CALLBACK_URL |  Google call back değeri Sadece server adresini değişmeniz yeterli olur |
+| GOOGLE_CLIENT_ID  |  Google client id  |
+| GOOGLE_CLIENT_SECRET  |  Google client secret |
+| MONGO_URL |  Mongo db adresi |
+| NODE_ENV  | `development` veya `production`  |
+| SESSION_SECRET  | Forum işlemleri için  gerkli gizli anahtar |
+|  PORT |  Sunucu için port  |
+
 
 Example `.env` file
 ```env
@@ -37,6 +49,12 @@ NODE_ENV=development
 SESSION_SECRET=im_secret
 PORT=3000
 ```
+
+```sh
+yarn dev
+```
+
+diyerek geliştirici sunucusu çalıştırın
 
 ## Author
 
