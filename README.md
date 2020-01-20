@@ -37,7 +37,7 @@ Blog çalışabilmesi için bazı ortam değişkenlerine ihtiyaç duyar
 |  PORT |  Sunucu için port  |
 
 
-Example `.env` file
+Örnek `.env` dosyası
 ```env
 DOMAIN=http://localhost:3000
 GOOGLE_ADMIN_ID=111111111111111111
