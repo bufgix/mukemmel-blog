@@ -30,7 +30,7 @@ class BlogPost extends React.Component {
     const { post } = this.props;
     return (
       <div>
-        <Head />
+        <Head title={post.title}/>
         <Container className="blog-container">
           <div className="blog mt-3 mt-sm-3 mb-5">
             <Image src={post.imageUrl} fluid />
