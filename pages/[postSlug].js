@@ -1,7 +1,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Container, Image } from "react-bootstrap";
-import { FaClock } from "react-icons/fa";
+import { FaClock, FaArrowLeft } from "react-icons/fa";
 import Social from "../components/Social";
 import Head from "../components/Head";
 import { parseDate, emojiSupport } from "../components/utils";
@@ -31,7 +31,8 @@ class BlogPost extends React.Component {
     return (
       <div>
         <Head title={post.title}/>
-        <Container className="blog-container">
+        <Container className="blog-container mt-2">
+          <a href="/" className="back-btn"><FaArrowLeft size={30}/></a>
           <div className="blog mt-3 mt-sm-3 mb-5">
             <Image src={post.imageUrl} fluid />
             <h1 className="blog-title mt-2">{post.title}</h1>

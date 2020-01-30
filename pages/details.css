@@ -17,6 +17,15 @@
   background-color: #E0E0E0;
 }
 
+.back-btn {
+  border-bottom: none !important;
+}
+
+.back-btn:hover {
+  color: #da1c5e;
+}
+
+
 @media (min-width: 1200px) {
   .blog-container {
     max-width: 960px !important;
