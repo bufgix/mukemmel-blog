@@ -2,7 +2,7 @@ import React from "react";
 
 const Social = () => (
   <div className="social">
-    <ul>
+    <ul style={{padding: 0}}>
       <li className="social-item">
         <a href="https://github.com/bufgix">Github</a>
       </li>
