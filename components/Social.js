@@ -15,9 +15,9 @@ const Social = () => (
         </a>
       </li>
     </ul>
-    <div>
+{/*     <div>
       <a href="/about">About</a>
-    </div>
+    </div> */}
   </div>
 );
 
